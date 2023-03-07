@@ -2,10 +2,14 @@
 
 internal class Node <T>
 {
-    private Node<T> _next;
+    public Node<T> Next;
+    public Node<T> Prev;
+    public T Value;
 
-    public Node(Node<T> next)
+    public Node(Node<T> next, Node<T> prev, T value)
     {
-        _next = next;
+        Next = next;
+        Prev = prev;
+        Value = value;
     }
 }
