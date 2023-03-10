@@ -7,8 +7,12 @@ a.Append(2);
 a.Append(3);
 a.Append(4);
 
-a.Insert(5, 0);
-foreach (var vvv in a.GetAll())
+foreach (var vvv in a)
+{
+    Console.WriteLine(vvv);
+}
+a.Reverse();
+foreach (var vvv in a)
 {
     Console.WriteLine(vvv);
 }

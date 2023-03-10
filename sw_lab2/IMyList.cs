@@ -1,6 +1,6 @@
 ﻿namespace sw_lab2;
 
-public interface IMyList<T>
+public interface IMyList<T> : IEnumerable<T>
 {
     int Length();
     void Append(T element);
@@ -9,8 +9,9 @@ public interface IMyList<T>
     void DeleteAll(T element);
     T Get(int index);
     IMyList<T> Clone();
+    void Reverse();
     int FindFirst(T element);
     int FindLast(T element);
     void Clear();
-    void Extend(IMyList<T> list);
+    void Extend(IEnumerable<T> list);
 }
