@@ -1,18 +1,17 @@
 ﻿using sw_lab2;
 
-var a = new MyLinkedList<int>();
-a.Append(0);
-a.Append(1);
-a.Append(2);
-a.Append(3);
-a.Append(4);
-
-foreach (var vvv in a)
+var test = new MyLinkedList<char>();
+test.Append('1');
+test.Append('2');
+test.Append('3');
+foreach (var vvv in test)
 {
     Console.WriteLine(vvv);
 }
-a.Reverse();
-foreach (var vvv in a)
+test.Get(-1);
+
+
+foreach (var vvv in test)
 {
     Console.WriteLine(vvv);
 }

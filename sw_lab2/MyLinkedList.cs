@@ -31,15 +31,24 @@ public class MyLinkedList<T> : IMyList<T>
         try
         {
             var temp = _head;
+            var tempPrev = new Node<T>();
             var i = 0;
             while (i < index)
             {
+                tempPrev = temp;
                 temp = temp.Next;
                 i++;
             }
-            var newNode = new Node<T>(temp, temp.Prev, element);
-            temp.Prev.Next = newNode;
-            temp.Prev = newNode;
+            
+            var newNode = new Node<T>(temp, tempPrev, element);
+            if (tempPrev is not null)
+                tempPrev.Next = newNode;
+
+            if (temp is not null)
+                temp.Prev = newNode;
+
+            if (index == 0)
+                _head = newNode;
         }
         catch
         {
@@ -54,6 +63,13 @@ public class MyLinkedList<T> : IMyList<T>
         try
         {
             var temp = _head;
+            
+            if (index == 0)
+            {
+                _head = temp.Next;
+                return temp.Value;
+            }
+            
             var i = 0;
             while (i < index)
             {
@@ -81,13 +97,25 @@ public class MyLinkedList<T> : IMyList<T>
             var temp = _head;
             while (temp is not null)
             {
-                temp = temp.Next;
-                if (EqualityComparer<T>.Default.Equals(temp.Value, element)) 
+                if (temp is null || !EqualityComparer<T>.Default.Equals(temp.Value, element))
+                {
+                    temp = temp.Next;
                     continue;
-                
+                }
+
+                if (temp == _head)
+                {
+                    _head = temp.Next;
+                    temp = _head;
+                    if (_head is not null) 
+                        _head.Prev = null;
+                    deleted++;
+                    continue;
+                }
                 if (temp.Prev is not null)
                     temp.Prev.Next = temp.Next;
-                temp.Next = temp.Prev;
+                temp.Next.Prev = temp.Prev;
+                temp = temp.Next;
                 deleted++;
             }
 
@@ -104,9 +132,12 @@ public class MyLinkedList<T> : IMyList<T>
     {
         try
         {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException();
+
             int i = 0;
             var temp = _head;
-            while (i <= index)
+            while (i < index)
             {
                 temp = temp.Next;
                 i++;
@@ -200,6 +231,7 @@ public class MyLinkedList<T> : IMyList<T>
     public void Clear()
     {
         _head = null;
+        _lenght = 0;
     }
     
     public void Extend(IEnumerable<T> list)

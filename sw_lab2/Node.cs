@@ -6,6 +6,11 @@ internal class Node <T>
     public Node<T> Prev;
     public T Value;
 
+    public Node()
+    {
+        
+    }
+
     public Node(Node<T> next, Node<T> prev, T value)
     {
         Next = next;
