@@ -4,126 +4,50 @@ namespace sw_lab2;
 
 public class MyLinkedList<T> : IMyList<T>
 {
-    private Node<T> _head;
-    private int _lenght = 0;
-
+    private List<T> _list = new();
     public int Length()
-        => _lenght;
+        => _list.Count;
     
     public void Append(T element)
     {
-        _lenght++;
-        var temp = _head; 
-        while (temp is not null && temp.Next is not null)
-        {
-            temp = temp.Next;
-        }
-        var newNode = new Node<T>(null, temp, element);
-        if (temp is not null)
-            temp.Next = newNode;
-        else
-            _head = newNode;
+        _list.Add(element);
     }
 
     public void Insert(T element, int index)
     {
-        _lenght++;
+        
         try
         {
-            var temp = _head;
-            var tempPrev = new Node<T>();
-            var i = 0;
-            while (i < index)
-            {
-                tempPrev = temp;
-                temp = temp.Next;
-                i++;
-            }
-            
-            var newNode = new Node<T>(temp, tempPrev, element);
-            if (tempPrev is not null)
-                tempPrev.Next = newNode;
-
-            if (temp is not null)
-                temp.Prev = newNode;
-
-            if (index == 0)
-                _head = newNode;
+            _list.Insert(index, element);
         }
         catch
         {
-            _lenght--;
             throw new ArgumentOutOfRangeException();
         }
     }
 
     public T Delete(int index)
     {
-        _lenght--;
         try
         {
-            var temp = _head;
-            
-            if (index == 0)
-            {
-                _head = temp.Next;
-                return temp.Value;
-            }
-            
-            var i = 0;
-            while (i < index)
-            {
-                temp = temp.Next;
-                i++;
-            }
-
-            if (temp.Prev is not null)
-                temp.Prev.Next = temp.Next;
-            temp.Next = temp.Prev;
-            return temp.Value;
+            var el = _list[index];
+           _list.RemoveAt(index);
+           return el;
         }
         catch
         {
-            _lenght++;
             throw new ArgumentOutOfRangeException();
         }
     }
 
     public void DeleteAll(T element)
     {
-        var deleted = 0;
         try
         {
-            var temp = _head;
-            while (temp is not null)
-            {
-                if (temp is null || !EqualityComparer<T>.Default.Equals(temp.Value, element))
-                {
-                    temp = temp.Next;
-                    continue;
-                }
-
-                if (temp == _head)
-                {
-                    _head = temp.Next;
-                    temp = _head;
-                    if (_head is not null) 
-                        _head.Prev = null;
-                    deleted++;
-                    continue;
-                }
-                if (temp.Prev is not null)
-                    temp.Prev.Next = temp.Next;
-                temp.Next.Prev = temp.Prev;
-                temp = temp.Next;
-                deleted++;
-            }
-
-            _lenght -= deleted;
+            _list.RemoveAll(i => EqualityComparer<T>.Default.Equals(i, element));
         }
         catch (Exception e)
         {
-            _lenght += deleted;
             throw new ArgumentOutOfRangeException();
         }
     }
@@ -132,18 +56,7 @@ public class MyLinkedList<T> : IMyList<T>
     {
         try
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException();
-
-            int i = 0;
-            var temp = _head;
-            while (i < index)
-            {
-                temp = temp.Next;
-                i++;
-            }
-
-            return temp.Value;
+            return _list[index];
         }
         catch (Exception e)
         {
@@ -171,35 +84,14 @@ public class MyLinkedList<T> : IMyList<T>
 
     public void Reverse()
     {
-        var temp = _head; 
-        while (temp is not null)
-        {
-            if (temp.Next is null)
-            {
-                _head = temp;
-            }
-
-            var n = temp.Next;
-            var p = temp.Prev;
-            temp.Next = p;
-            temp.Prev = n;
-            temp = temp.Prev;
-        }
+        _list.Reverse();
     }
 
     public int FindFirst(T element)
     {
         try
         {
-            var i = 0;
-            foreach (var val in this)
-            {
-                if (EqualityComparer<T>.Default.Equals(val, element))
-                    return i;
-                i++;
-            }
-
-            return -1;
+            return _list.FindIndex(i => EqualityComparer<T>.Default.Equals(i, element));
         }
         catch (Exception e)
         {
@@ -211,16 +103,7 @@ public class MyLinkedList<T> : IMyList<T>
     {
         try
         {
-            var i = 0;
-            var lastFind = -1;
-            foreach (var val in this)
-            {
-                if (EqualityComparer<T>.Default.Equals(val, element))
-                    lastFind = i;
-                i++;
-            }
-
-            return lastFind;
+            return _list.FindLastIndex(i => EqualityComparer<T>.Default.Equals(i, element));
         }
         catch (Exception e)
         {
@@ -230,8 +113,7 @@ public class MyLinkedList<T> : IMyList<T>
 
     public void Clear()
     {
-        _head = null;
-        _lenght = 0;
+        _list.Clear();
     }
     
     public void Extend(IEnumerable<T> list)
@@ -246,12 +128,7 @@ public class MyLinkedList<T> : IMyList<T>
     // Implement Iterator pattern
     public IEnumerator<T> GetEnumerator()
     {
-        var temp = _head;
-        while (temp is not null)
-        {
-            yield  return temp.Value;
-            temp = temp.Next;
-        }
+        return _list.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
